@@ -2,8 +2,9 @@ import Realty from '../models/Realty.js';
 import fs from 'fs';
 
 class RealtyService {
-    async create(realty, images) {
-        const imageNames = images.map(image => image.filename);
+    async create(realty, images = []) {
+        const imageNames = images.map(image => image?.filename);
+
         return await Realty.create({ ...realty, images: imageNames });
     }
 
@@ -19,12 +20,13 @@ class RealtyService {
         return await Realty.find();
     }
 
-    async update(id, realty, images) {
+    async update(id, realty, images = []) {
         if (!id) {
             throw new Error('wrong id');
         }
 
         const imageNames = images.map(image => image.filename);
+
         return await Realty.findByIdAndUpdate(
             id, {
                 ...realty,
