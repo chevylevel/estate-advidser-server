@@ -1,7 +1,10 @@
 import { Schema, model } from 'mongoose';
 
 const Realty = new Schema({
-    variant: { type: String, required: true },
+    name: { type: String, required: true },
+    realtyType: { type: String, required: true },
+    ownership: {type: String, required: true},
+    ownershipPeriod: {type: String },
     squareMin: { type: String, required: true },
     squareMax:  { type: String, required: true },
     priceMin: { type: String, required: true },
@@ -16,7 +19,7 @@ const Realty = new Schema({
     livingPossibility: { type: String, required: true },
     constructionStatus: { type: String, required: true },
     description: { type: String, required: true },
-    picture: { type: String, required: true },
+    images: { type: [String] },
 });
 
 export default model('Realty', Realty);
