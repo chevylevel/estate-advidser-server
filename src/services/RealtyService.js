@@ -34,9 +34,8 @@ class RealtyService {
         );
     }
 
-    async removeImage(id, image) {
-        console.log('service', id, image);
-        if (!id) {
+    async removeImage(id, imageId) {
+        if (!id || !imageId) {
             throw new Error('wrong id');
         }
 
@@ -44,12 +43,12 @@ class RealtyService {
             const res = await Realty.findByIdAndUpdate(
                 id,
                 {
-                    $pull: { images: { $in: [image] }},
+                    $pull: { images: { $in: [imageId] }},
                 },
                 { new: true },
             );
 
-            fs.unlink(`static/${image}`, () => console.log(`удалено ${image}`));
+            fs.unlink(`static/${imageId}`, () => console.log(`удалено ${imageId}`));
 
             return res;
         } catch (error) {

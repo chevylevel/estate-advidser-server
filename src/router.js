@@ -17,7 +17,7 @@ router.get('/realties', RealtyController.getAll);
 router.get('/realties/:id', RealtyController.getOne);
 router.post('/realties', upload.array('images'), RealtyController.create);
 router.put('/realties/:id', upload.array('images'), RealtyController.update);
-router.put('/realties/:id/:image', RealtyController.removeImage);
+router.put('/realties/:id/:imageId', RealtyController.removeImage);
 router.delete('/realties/:id', RealtyController.delete);
 
 export default router;

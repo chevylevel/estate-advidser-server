@@ -38,7 +38,9 @@ class RealtyController {
         try {
             const realty = ctx.request.body;
             const { id } = ctx.params;
-            const updatedRealty = await RealtyService.update(id, realty);
+
+            console.log('=========update', id, realty, ctx.files);
+            const updatedRealty = await RealtyService.update(id, realty, ctx.files);
             ctx.response.body = updatedRealty;
         } catch (error) {
             ctx.response.status = 500;
@@ -51,6 +53,17 @@ class RealtyController {
             const { id } = ctx.params;
             const deletedRealty = await RealtyService.delete(id);
             ctx.response.body = deletedRealty;
+        } catch (error) {
+            ctx.response.status = 500;
+            ctx.response.body = error;
+        }
+    }
+
+    async removeImage(ctx) {
+        try {
+            const { id, imageId } = ctx.params;
+            const updatedRealty = await RealtyService.removeImage(id, imageId);
+            ctx.response.body = updatedRealty;
         } catch (error) {
             ctx.response.status = 500;
             ctx.response.body = error;
