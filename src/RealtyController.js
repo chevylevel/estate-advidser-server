@@ -39,7 +39,6 @@ class RealtyController {
             const realty = ctx.request.body;
             const { id } = ctx.params;
 
-            console.log('=========update', id, realty, ctx.files);
             const updatedRealty = await RealtyService.update(id, realty, ctx.files);
             ctx.response.body = updatedRealty;
         } catch (error) {
