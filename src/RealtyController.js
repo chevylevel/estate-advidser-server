@@ -4,7 +4,7 @@ import RealtyService from './services/RealtyService.js';
 class RealtyController {
     async create(ctx) {
         try {
-            const createdRealty = await RealtyService.create(ctx.request.body, ctx.file);
+            const createdRealty = await RealtyService.create(ctx.request.body, ctx.files);
             ctx.response.body = createdRealty;
 
         } catch (error) {
