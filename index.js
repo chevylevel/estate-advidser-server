@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 import bodyparser from 'koa-bodyparser';
 import serve from 'koa-static';
 import cors from '@koa/cors';
+import 'dotenv/config';
 
-import apiRouter from './src/router.js';
+import router from './src/router.js';
+import errorMiddleware from './src/middlewares/error.js';
 
-const DB_URL = 'mongodb+srv://chevylevel:D4lli92QDYyid1ZR@e-adviser.qprak4y.mongodb.net/?retryWrites=true&w=majority';
+const DB_URL = process.env.DB_URL;
 const PORT = process.env.PORT || 4000;
 
 const app = new Koa();
@@ -21,10 +23,14 @@ const startApp = async () => {
     }
 }
 
+app.use(errorMiddleware);
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}));
 app.use(serve('static'));
-app.use(cors());
 app.use(bodyparser());
-app.use(apiRouter.routes());
-app.use(apiRouter.allowedMethods());
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 startApp();

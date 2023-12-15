@@ -1,10 +1,10 @@
-import RealtyService from './services/RealtyService.js';
+import RealtyService from '../services/Realty.js';
 
 
 class RealtyController {
     async create(ctx) {
         try {
-            const createdRealty = await RealtyService.create(ctx.request.body, ctx.files);
+            const createdRealty = await RealtyService.create(ctx.request.body);
             ctx.response.body = createdRealty;
 
         } catch (error) {
@@ -39,7 +39,7 @@ class RealtyController {
             const realty = ctx.request.body;
             const { id } = ctx.params;
 
-            const updatedRealty = await RealtyService.update(id, realty, ctx.files);
+            const updatedRealty = await RealtyService.update(id, realty);
             ctx.response.body = updatedRealty;
         } catch (error) {
             ctx.response.status = 500;

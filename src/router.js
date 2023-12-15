@@ -1,23 +1,14 @@
 import Router from '@koa/router';
-import multer from '@koa/multer';
 
-import RealtyController from './RealtyController.js';
-import FileService from './services/FileService.js';
+import authRouter from './routers/auth.js';
+import realtyRouter from './routers/realty.js';
+import signUploadFormRouter from './routers/signUploadForm.js';
 
-const storage = multer.diskStorage({
-    destination: 'static',
-    filename: FileService.generateFileName,
-})
+const router = new Router();
 
-const upload = multer({ storage });
-
-const router = new Router({ prefix :'/api' });
-
-router.get('/realties', RealtyController.getAll);
-router.get('/realties/:id', RealtyController.getOne);
-router.post('/realties', upload.array('images'), RealtyController.create);
-router.put('/realties/:id', upload.array('images'), RealtyController.update);
-router.put('/realties/:id/:imageId', RealtyController.removeImage);
-router.delete('/realties/:id', RealtyController.delete);
+router
+    .use(authRouter)
+    .use(realtyRouter)
+    .use(signUploadFormRouter);
 
 export default router;

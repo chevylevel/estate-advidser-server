@@ -1,11 +1,10 @@
 import Realty from '../models/Realty.js';
-import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 
 class RealtyService {
-    async create(realty, images = []) {
-        const imageNames = images.map(image => image?.filename);
-
-        return await Realty.create({ ...realty, images: imageNames });
+    async create(realty) {
+        const images = JSON.parse(realty?.images);
+        return await Realty.create({...realty, images});
     }
 
     async getOne(id) {
@@ -20,44 +19,43 @@ class RealtyService {
         return await Realty.find();
     }
 
-    async update(id, realty, images = []) {
+    async update(id, realty) {
         if (!id) {
             throw new Error('wrong id');
         }
 
-        const imageNames = images.map(image => image.filename);
+        const images = JSON.parse(realty?.images) || [];
 
         return await Realty.findByIdAndUpdate(
             id, {
                 ...realty,
-                $push: { images: { $each: imageNames }},
+                $push: { images: { $each: images }},
             },
             { new: true }
         );
     }
 
-    async removeImage(id, imageId) {
+    async removeImage(realtyId, imageId) {
         if (!id || !imageId) {
             throw new Error('wrong id');
         }
 
         try {
-            const res = await Realty.findByIdAndUpdate(
+            const destroyResponse = cloudinary.uploader.destroy(imageId);
+            const updateResponse = Realty.findByIdAndUpdate(
                 id,
                 {
-                    $pull: { images: { $in: [imageId] }},
+                    $pull: { images: { _id: [imageId] }},
                 },
                 { new: true },
             );
 
-            fs.unlink(`static/${imageId}`, () => console.log(`удалено ${imageId}`));
+            const [destroyed, updated] = await Promise.all([destroyResponse, updateResponse]);
 
-            return res;
+            return updated;
         } catch (error) {
             console.log(error);
         }
-
-
     }
 
     async delete(id) {
@@ -65,12 +63,12 @@ class RealtyService {
             throw new Error('wrong id');
         }
 
-        const realty = await Realty.findById(id);
-        realty.images.forEach((image) => fs.unlink(`static/${image}`, () => console.log(`удалено ${image}`)));
-
-        return await Realty.findByIdAndDelete(id);
+        try {
+            return await Realty.findByIdAndDelete(id);
+        } catch (error) {
+            console.log(error);
+        }
     }
-
 }
 
 export default new RealtyService();
