@@ -59,4 +59,4 @@ jobs:
           app-name: 'estate-adviser'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_69430BF82799483C8F090ACC0A29F8BC }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9CD9C75D8FBB4071AA5A344AAFAE153F }}
