@@ -3,7 +3,8 @@ import { v2 as cloudinary } from 'cloudinary';
 
 class RealtyService {
     async create(realty) {
-        const images = JSON.parse(realty?.images);
+        const images = JSON.parse(realty?.images || null) || [];
+
         return await Realty.create({...realty, images});
     }
 
@@ -19,31 +20,34 @@ class RealtyService {
         return await Realty.find();
     }
 
-    async update(id, realty) {
+    async update(id, payload) {
         if (!id) {
             throw new Error('wrong id');
         }
 
-        const images = JSON.parse(realty?.images) || [];
+        const parsedImages = JSON.parse(payload.images) || [];
+
+        delete payload.images;
 
         return await Realty.findByIdAndUpdate(
-            id, {
-                ...realty,
-                $push: { images: { $each: images }},
+            id,
+            {
+                ...payload,
+                $push: { images: { $each: parsedImages } },
             },
-            { new: true }
+            { new: true },
         );
     }
 
     async removeImage(realtyId, imageId) {
-        if (!id || !imageId) {
+        if (!realtyId || !imageId) {
             throw new Error('wrong id');
         }
 
         try {
             const destroyResponse = cloudinary.uploader.destroy(imageId);
             const updateResponse = Realty.findByIdAndUpdate(
-                id,
+                realtyId,
                 {
                     $pull: { images: { _id: [imageId] }},
                 },
@@ -54,7 +58,7 @@ class RealtyService {
 
             return updated;
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -66,7 +70,7 @@ class RealtyService {
         try {
             return await Realty.findByIdAndDelete(id);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 }

@@ -1,6 +1,5 @@
 import RealtyService from '../services/Realty.js';
 
-
 class RealtyController {
     async create(ctx) {
         try {
@@ -9,7 +8,7 @@ class RealtyController {
 
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 
@@ -19,7 +18,7 @@ class RealtyController {
             ctx.response.body = realties;
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 
@@ -30,20 +29,20 @@ class RealtyController {
             ctx.response.body = realty;
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 
     async update(ctx) {
         try {
-            const realty = ctx.request.body;
+            const payload = ctx.request.body;
             const { id } = ctx.params;
 
-            const updatedRealty = await RealtyService.update(id, realty);
+            const updatedRealty = await RealtyService.update(id, payload);
             ctx.response.body = updatedRealty;
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 
@@ -54,18 +53,18 @@ class RealtyController {
             ctx.response.body = deletedRealty;
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 
     async removeImage(ctx) {
         try {
-            const { id, imageId } = ctx.params;
-            const updatedRealty = await RealtyService.removeImage(id, imageId);
+            const { realtyId, imageId } = ctx.params;
+            const updatedRealty = await RealtyService.removeImage(realtyId, imageId);
             ctx.response.body = updatedRealty;
         } catch (error) {
             ctx.response.status = 500;
-            ctx.response.body = error;
+            ctx.response.body = { message: error.message };
         }
     }
 }

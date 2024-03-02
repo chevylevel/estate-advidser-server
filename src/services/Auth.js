@@ -133,8 +133,6 @@ class AuthService {
 
         if (!userModel || !tokenPayload) {
 
-            console.log(userModel, tokenPayload);
-
             throw ApiError.UnauthorizedError();
         }
 
@@ -162,7 +160,7 @@ class AuthService {
         const client = new OAuth2Client();
 
         const ticket = await client.verifyIdToken({
-            idToken: token.token,
+            idToken: token,
             audience: process.env.GOOGLE_CLIENT_ID,
         });
 

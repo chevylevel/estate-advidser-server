@@ -52,9 +52,7 @@ class AuthController  {
     }
 
     async signInWithGoogle(ctx) {
-        const token = ctx.request.body;
-
-        console.log('token.token', token);
+        const { token } = ctx.request.body;
 
         const {
             refreshToken,

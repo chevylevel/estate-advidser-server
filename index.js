@@ -1,6 +1,6 @@
 import Koa from 'koa';
 import mongoose from 'mongoose';
-import bodyparser from 'koa-bodyparser';
+import { koaBody } from 'koa-body';
 import serve from 'koa-static';
 import cors from '@koa/cors';
 import 'dotenv/config';
@@ -19,7 +19,7 @@ const startApp = async () => {
 
         app.listen(PORT, console.log(`server is running on port: ${PORT}`));
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -28,8 +28,8 @@ app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL
 }));
+app.use(koaBody({ multipart: true }));
 app.use(serve('static'));
-app.use(bodyparser());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
