@@ -2,10 +2,21 @@ import Realty from '../models/Realty.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 class RealtyService {
+
+    getRealtyData = (realty) => ({
+        ...realty,
+        isPossibleToStay: !!realty?.isPossibleToStay,
+        withView: !!realty.withView,
+        withInstallment: !!realty.withInstallment,
+    })
+
     async create(realty) {
         const images = JSON.parse(realty?.images || null) || [];
 
-        return await Realty.create({...realty, images});
+        return await Realty.create({
+            ...this.getRealtyData(realty),
+            images
+        });
     }
 
     async getOne(id) {
@@ -32,7 +43,7 @@ class RealtyService {
         return await Realty.findByIdAndUpdate(
             id,
             {
-                ...payload,
+                ...this.getRealtyData(payload),
                 $push: { images: { $each: parsedImages } },
             },
             { new: true },
