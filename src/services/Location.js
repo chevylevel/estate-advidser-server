@@ -2,7 +2,9 @@ import Location from '../models/Location.js';
 
 class LocationService {
     async create(location) {
-        return await Location.create(location);
+        await Location.create(location);
+
+        return this.getAll();
     }
 
     async getAll() {
@@ -14,11 +16,13 @@ class LocationService {
             throw new Error('wrong id');
         }
 
-        return await Location.findByIdAndUpdate(
+        await Location.findByIdAndUpdate(
             id,
             location,
             { new: true },
         );
+
+        return this.getAll()
     }
 
     async delete(id) {
@@ -27,7 +31,9 @@ class LocationService {
         }
 
         try {
-            return await Location.findByIdAndDelete(id);
+            await Location.findByIdAndDelete(id);
+
+            return this.getAll()
         } catch (error) {
             console.error(error);
         }

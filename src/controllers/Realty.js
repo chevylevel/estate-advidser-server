@@ -14,7 +14,8 @@ class RealtyController {
 
     async getAll(ctx) {
         try {
-            const realties = await RealtyService.getAll()
+            const payload = ctx.request.body;
+            const realties = await RealtyService.getAll(payload)
             ctx.response.body = realties;
         } catch (error) {
             ctx.response.status = 500;

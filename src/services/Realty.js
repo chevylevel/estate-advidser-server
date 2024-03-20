@@ -2,7 +2,6 @@ import Realty from '../models/Realty.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 class RealtyService {
-
     getRealtyData = (realty) => ({
         ...realty,
         isPossibleToStay: !!realty?.isPossibleToStay,

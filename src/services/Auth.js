@@ -12,7 +12,7 @@ class AuthService {
     async signUp(email, password) {
         const candidate = await User.findOne({ email });
 
-        if (candidate) {
+        if (candidate && candidate.password) {
             throw ApiError.BadRequestError('Пользователь с таким email уже зарегистрирован');
         }
 
@@ -23,11 +23,23 @@ class AuthService {
             `${process.env.API_URL}/activate/${encodeURIComponent(hashedPassword)}`
         );
 
-        const userModel = await User.create({
-            email,
-            password: hashedPassword,
-            roles: ['user'],
-        });
+        let userModel;
+
+        if (candidate) {
+            userModel = await User.updateOne(
+                { email },
+                {
+                    password: hashedPassword,
+                    roles: ['user'],
+                }
+            );
+        } else {
+            userModel = await User.create({
+                email,
+                password: hashedPassword,
+                roles: ['user'],
+            });
+        }
 
         const user = new UserDto(userModel);
 
@@ -46,13 +58,9 @@ class AuthService {
     }
 
     async signIn(email, password) {
-        const [
-            userModel,
-            isValidPassword,
-        ] = await Promise.all(
-            User.findOne({ email: email }),
-            bcrypt.compare(password, userModel.password),
-        );
+        const userModel = await User.findOne({ email: email });
+
+        const isValidPassword = await bcrypt.compare(password, userModel?.password);
 
         if (!userModel || !isValidPassword) {
             throw ApiError.BadRequestError('Неверное имя пользователя или пароль');
@@ -129,10 +137,16 @@ class AuthService {
         }
 
         const tokenPayload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+
+        // console.log('db==========', (await User.findById(tokenPayload.user.id)).refreshToken);
+
         const userModel = await User.findOne({ refreshToken });
 
-        if (!userModel || !tokenPayload) {
+        // console.log('params======', refreshToken );
 
+        if (!userModel || !tokenPayload) {
+            // console.log('tok pal');
             throw ApiError.UnauthorizedError();
         }
 

@@ -95,7 +95,7 @@ class AuthController  {
     async refresh(ctx) {
         const refreshToken = ctx.cookies.get('refreshToken');
 
-        const{
+        const {
             refreshToken: newRefreshToken,
             accessToken: newAccessToken,
             user,

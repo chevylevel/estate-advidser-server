@@ -6,6 +6,7 @@ const User = new Schema({
     roles: [{ type: String, ref: 'Role', default: 'user' }],
     isActivated: { type: Boolean, default: false },
     refreshToken: { type: String },
+    favorites: [String],
 });
 
 export default model('User', User);

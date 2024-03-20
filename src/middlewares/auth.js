@@ -5,14 +5,18 @@ export const authMiddleware = (async (ctx, next) => {
     if (ctx.request.method === 'OPTIONS') {
         await next();
     }
-
     const token = ctx.request.headers?.authorization?.split(' ')[1] || '';
 
     try {
+        console.log('req====', ctx.request);
         const { user } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        ctx.request.user = user;
+
+        console.log('user====', user);
+
+        ctx.state.user = user;
     } catch (error) {
-        throw ApiError.UnauthorizedError();
+        console.log('throw UnauthorizedError Bearer token verify failed ');
+        throw ApiError.UnauthorizedError('Bearer token verify failed at auth middleware');
     }
 
     await next();

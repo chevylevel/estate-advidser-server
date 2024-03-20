@@ -3,8 +3,8 @@ import LocationService from '../services/Location.js';
 class LocationController {
     async create(ctx) {
         try {
-            const newLocation = await LocationService.create(ctx.request.body);
-            ctx.response.body = newLocation;
+            const locations = await LocationService.create(ctx.request.body);
+            ctx.response.body = locations;
 
         } catch (error) {
             ctx.response.status = 500;
@@ -27,8 +27,8 @@ class LocationController {
             const location = ctx.request.body;
             const { id } = ctx.params;
 
-            const updatedLocation = await LocationService.update(id, location);
-            ctx.response.body = updatedLocation;
+            const locations = await LocationService.update(id, location);
+            ctx.response.body = locations;
         } catch (error) {
             ctx.response.status = 500;
             ctx.response.body = { message: error.message };
