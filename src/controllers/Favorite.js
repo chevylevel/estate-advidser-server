@@ -3,10 +3,8 @@ import FavoriteService from '../services/Favorite.js';
 class FavoriteController {
     async getFavorites(ctx) {
         try {
-            console.log('hi', ctx.state.user);
             const favorites = await FavoriteService.getFavorites(ctx.state.user.id)
 
-            // console.log('=======', favorites);
             ctx.response.body = favorites;
         } catch (error) {
             ctx.response.status = 500;

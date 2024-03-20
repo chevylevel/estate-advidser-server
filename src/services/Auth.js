@@ -137,16 +137,9 @@ class AuthService {
         }
 
         const tokenPayload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
-
-        // console.log('db==========', (await User.findById(tokenPayload.user.id)).refreshToken);
-
         const userModel = await User.findOne({ refreshToken });
 
-        // console.log('params======', refreshToken );
-
         if (!userModel || !tokenPayload) {
-            // console.log('tok pal');
             throw ApiError.UnauthorizedError();
         }
 
